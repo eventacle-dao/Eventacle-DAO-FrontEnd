@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
 import { DevPage } from './pages/DevPage'
+import { DevPOAPPage } from './pages/DevPOAPPage'
 import './App.css'
 
 function HomePage() {
@@ -29,6 +30,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/dev" element={<DevPage />} />
+        <Route path="/dev/poap/:address" element={<DevPOAPPage />} />
       </Routes>
     </BrowserRouter>
   )

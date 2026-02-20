@@ -459,7 +459,16 @@ export function DevPage() {
                     <div>
                       <dt className="text-muted-foreground">POAP 合约地址</dt>
                       <dd className="font-mono break-all">
-                        {detailPOAP != null ? String(detailPOAP) : '—'}
+                        {detailPOAP != null ? (
+                          <Link
+                            to={`/dev/poap/${encodeURIComponent(String(detailPOAP))}`}
+                            className="text-primary underline hover:no-underline"
+                          >
+                            {String(detailPOAP)}
+                          </Link>
+                        ) : (
+                          '—'
+                        )}
                       </dd>
                     </div>
                     <div>

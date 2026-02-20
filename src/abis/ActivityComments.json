@@ -1,0 +1,532 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "_factory",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "_reviewGate",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "activityId",
+        "type": "string"
+      }
+    ],
+    "name": "ActivityNotFound",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "CannotSetInQuestionSelf",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "CommentAlreadyReviewed",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "CommentIndexOutOfRange",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "replyToIndex",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "currentLength",
+        "type": "uint256"
+      }
+    ],
+    "name": "InvalidReplyToIndex",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NoReviewGate",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NotPOAPHolder",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NotReviewer",
+    "type": "error"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "string",
+        "name": "activityId",
+        "type": "string"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "commentIndex",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "inQuestion",
+        "type": "bool"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "setBy",
+        "type": "address"
+      }
+    ],
+    "name": "CommentInQuestionSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "string",
+        "name": "activityId",
+        "type": "string"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "commenter",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "commentIndex",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "contentURI",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "reviewURI",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "isVisible",
+        "type": "bool"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "replyToIndex",
+        "type": "uint256"
+      }
+    ],
+    "name": "CommentPosted",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "string",
+        "name": "activityId",
+        "type": "string"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "commentIndex",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "reviewURI",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "reviewer",
+        "type": "address"
+      }
+    ],
+    "name": "CommentReviewed",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "string",
+        "name": "activityId",
+        "type": "string"
+      },
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "commentIndex",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "visible",
+        "type": "bool"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "setBy",
+        "type": "address"
+      }
+    ],
+    "name": "CommentVisibilitySet",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "NO_PARENT",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "factory",
+    "outputs": [
+      {
+        "internalType": "contract ActivityFactory",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "activityId",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "index",
+        "type": "uint256"
+      }
+    ],
+    "name": "getComment",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "commenter",
+        "type": "address"
+      },
+      {
+        "internalType": "string",
+        "name": "contentURI",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "reviewURI",
+        "type": "string"
+      },
+      {
+        "internalType": "bool",
+        "name": "isVisible",
+        "type": "bool"
+      },
+      {
+        "internalType": "bool",
+        "name": "inQuestion",
+        "type": "bool"
+      },
+      {
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "replyToIndex",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "activityId",
+        "type": "string"
+      }
+    ],
+    "name": "getCommentCount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "activityId",
+        "type": "string"
+      }
+    ],
+    "name": "getComments",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "address",
+            "name": "commenter",
+            "type": "address"
+          },
+          {
+            "internalType": "string",
+            "name": "contentURI",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "reviewURI",
+            "type": "string"
+          },
+          {
+            "internalType": "bool",
+            "name": "isVisible",
+            "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "inQuestion",
+            "type": "bool"
+          },
+          {
+            "internalType": "address",
+            "name": "reviewer",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "reviewTimestamp",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "timestamp",
+            "type": "uint256"
+          },
+          {
+            "internalType": "enum ActivityComments.CommentType",
+            "name": "commentType",
+            "type": "uint8"
+          },
+          {
+            "internalType": "uint256",
+            "name": "replyToIndex",
+            "type": "uint256"
+          }
+        ],
+        "internalType": "struct ActivityComments.Comment[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "activityId",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "contentURI",
+        "type": "string"
+      }
+    ],
+    "name": "postComment",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "activityId",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "replyToIndex",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "contentURI",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "reviewURI",
+        "type": "string"
+      }
+    ],
+    "name": "postReply",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "activityId",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "commentIndex",
+        "type": "uint256"
+      },
+      {
+        "internalType": "string",
+        "name": "reviewURI",
+        "type": "string"
+      },
+      {
+        "internalType": "bool",
+        "name": "isVisible",
+        "type": "bool"
+      }
+    ],
+    "name": "reviewComment",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "reviewGate",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "activityId",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "commentIndex",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "inQuestion",
+        "type": "bool"
+      }
+    ],
+    "name": "setCommentInQuestion",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "activityId",
+        "type": "string"
+      },
+      {
+        "internalType": "uint256",
+        "name": "commentIndex",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "visible",
+        "type": "bool"
+      }
+    ],
+    "name": "setCommentVisible",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]

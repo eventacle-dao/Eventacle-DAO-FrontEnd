@@ -1,35 +1,36 @@
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
 import { ConnectButton } from '@rainbow-me/rainbowkit'
-import { useBalance, useConnection } from 'wagmi'
-// import { Button } from '@/components/ui/button'
+import { DevPage } from './pages/DevPage'
 import './App.css'
 
-function App() {
-  const connection = useConnection()
-  const { data: balance, isLoading: isBalanceLoading } = useBalance({
-    address: connection.address,
-  })
-
+function HomePage() {
   return (
     <div className="min-h-svh flex flex-col items-center justify-center gap-6 p-6">
       <header className="flex items-center justify-between w-full max-w-4xl">
         <h1 className="text-2xl font-semibold">Eventacle DAO</h1>
         <ConnectButton showBalance={false} />
       </header>
-      <main className="flex flex-col items-center gap-4">
-        {connection.status === 'connected' && (
-          <div className="rounded-lg border bg-card px-4 py-3 text-card-foreground">
-            <p className="text-sm text-muted-foreground">当前链上余额</p>
-            <p className="text-lg font-medium tabular-nums">
-              {isBalanceLoading
-                ? '加载中…'
-                : balance != null
-                  ? `${(Number(balance.value) / 10 ** balance.decimals).toFixed(6)} ${balance.symbol}`
-                  : '—'}
-            </p>
-          </div>
-        )}
+      <main className="flex flex-col items-center gap-8 w-full max-w-4xl text-center">
+        <p className="text-muted-foreground">欢迎使用 Eventacle DAO</p>
+        <Link
+          to="/dev"
+          className="rounded bg-primary text-primary-foreground px-6 py-3 text-sm font-medium hover:opacity-90"
+        >
+          进入开发页面 / Dev
+        </Link>
       </main>
     </div>
+  )
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/dev" element={<DevPage />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 
